@@ -1,57 +1,330 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robin Shaw | Backend Engineer</title>
+<meta name="description" content="I'm a backend engineer. I was the sole owner of a production accounting system, and I traced a $2.3 million error back to one missing record.">
+<link rel="preload" href="fonts/space-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link href="fonts/fonts.css" rel="stylesheet">
 <style>
-	body {background-color: powderblue;}
-	h1, h2, #links * {font-family: "copperplate"}
+	:root {
+		--sky: #0b1426;
+		--sky-2: #14233f;
+		--star: #ffffff;
+		--hero-text: #eef2f8;
+		--hero-muted: #a9b6cc;
+		--accent: #f2a541;
+		--accent-ink: #1a1206;
+		--bg: #f6f4ef;
+		--card: #ffffff;
+		--text: #1b1f27;
+		--muted: #5a6270;
+		--rule: #e3dfd5;
+		--link: #1d5fa7;
+		--ok: #1f8a5b;
+		--shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.06);
+	}
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--bg: #10141c;
+			--card: #171c26;
+			--text: #e7eaf0;
+			--muted: #9aa3b2;
+			--rule: #262d3a;
+			--link: #8dbbf0;
+			--ok: #4cc38a;
+			--shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+		}
+		.contact { border: 1px solid #2a3a5a; }
+	}
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+	body {
+		margin: 0;
+		background: var(--bg);
+		color: var(--text);
+		font: 17px/1.65 Inter, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	}
+	a { color: var(--link); text-underline-offset: 3px; }
+	.wrap { max-width: 64rem; margin: 0 auto; padding: 0 1.25rem; }
+
+	/* Hero: night sky with a faint orbit */
+	.hero {
+		position: relative;
+		overflow: hidden;
+		color: var(--hero-text);
+		background:
+			radial-gradient(1px 1px at 12% 22%, var(--star) 50%, transparent 51%),
+			radial-gradient(1px 1px at 28% 68%, rgba(255,255,255,.7) 50%, transparent 51%),
+			radial-gradient(1.5px 1.5px at 44% 14%, var(--star) 50%, transparent 51%),
+			radial-gradient(1px 1px at 63% 81%, rgba(255,255,255,.6) 50%, transparent 51%),
+			radial-gradient(1px 1px at 77% 33%, var(--star) 50%, transparent 51%),
+			radial-gradient(1.5px 1.5px at 88% 62%, rgba(255,255,255,.8) 50%, transparent 51%),
+			radial-gradient(1px 1px at 93% 12%, rgba(255,255,255,.6) 50%, transparent 51%),
+			radial-gradient(1px 1px at 6% 86%, rgba(255,255,255,.5) 50%, transparent 51%),
+			radial-gradient(ellipse at 80% 0%, var(--sky-2), transparent 60%),
+			var(--sky);
+	}
+	.orbit {
+		position: absolute;
+		right: -14rem;
+		top: -6rem;
+		width: 40rem;
+		height: 40rem;
+		pointer-events: none;
+		opacity: .55;
+	}
+	nav {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-top: 1.25rem;
+		font: 500 0.85rem/1 "IBM Plex Mono", ui-monospace, monospace;
+		letter-spacing: .04em;
+	}
+	nav .mark { color: var(--hero-text); text-decoration: none; }
+	nav ul { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+	nav a { color: var(--hero-muted); text-decoration: none; }
+	nav a:hover { color: var(--hero-text); }
+	.hero-body { position: relative; padding: 5.5rem 0 5rem; max-width: 44rem; }
+	.eyebrow {
+		font: 500 0.8rem/1 "IBM Plex Mono", ui-monospace, monospace;
+		letter-spacing: .12em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin: 0 0 1rem;
+	}
+	h1 {
+		font: 700 clamp(2.6rem, 7vw, 4.2rem)/1.02 "Space Grotesk", Inter, sans-serif;
+		letter-spacing: -0.02em;
+		margin: 0 0 1.1rem;
+	}
+	.headline {
+		font: 500 clamp(1.15rem, 2.4vw, 1.4rem)/1.4 "Space Grotesk", Inter, sans-serif;
+		margin: 0 0 1.25rem;
+		color: var(--hero-text);
+	}
+	.pitch { color: var(--hero-muted); font-size: 1.05rem; margin: 0 0 2rem; max-width: 38rem; }
+	.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+	.btn {
+		display: inline-block;
+		padding: .7rem 1.15rem;
+		border-radius: 999px;
+		font: 600 .95rem/1 Inter, sans-serif;
+		text-decoration: none;
+	}
+	.btn-primary { background: var(--accent); color: var(--accent-ink); }
+	.btn-ghost { color: var(--hero-text); border: 1px solid rgba(255,255,255,.28); }
+	.btn:hover { filter: brightness(1.08); }
+	.place { margin-top: 1.5rem; color: var(--hero-muted); font-size: .9rem; }
+
+	/* Proof cards overlap the hero edge */
+	.proof {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+		margin-top: -2.75rem;
+	}
+	.stat {
+		background: var(--card);
+		border: 1px solid var(--rule);
+		border-radius: 14px;
+		padding: 1.25rem 1.3rem 1.3rem;
+		box-shadow: var(--shadow);
+	}
+	.stat .num {
+		display: block;
+		font: 700 2rem/1.1 "Space Grotesk", Inter, sans-serif;
+		letter-spacing: -0.01em;
+		margin-bottom: .35rem;
+	}
+	.stat .num .check { color: var(--ok); font-size: 1.2rem; vertical-align: .35rem; margin-left: .3rem; }
+	.stat p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.5; }
+
+	section { padding: 3.5rem 0 0; }
+	h2 {
+		font: 700 1.6rem/1.2 "Space Grotesk", Inter, sans-serif;
+		letter-spacing: -0.01em;
+		margin: 0 0 1.1rem;
+	}
+	.label {
+		font: 500 .78rem/1 "IBM Plex Mono", ui-monospace, monospace;
+		letter-spacing: .12em;
+		text-transform: uppercase;
+		color: var(--muted);
+		margin: 0 0 .6rem;
+	}
+	.prose { max-width: 42rem; }
+	.prose p { margin: 0 0 1rem; }
+	.chips { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 1.25rem 0 0; }
+	.chips li {
+		font: 500 .82rem/1 "IBM Plex Mono", ui-monospace, monospace;
+		padding: .45rem .7rem;
+		border: 1px solid var(--rule);
+		border-radius: 999px;
+		background: var(--card);
+	}
+
+	.projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+	.project {
+		background: var(--card);
+		border: 1px solid var(--rule);
+		border-radius: 14px;
+		padding: 1.3rem;
+		box-shadow: var(--shadow);
+	}
+	.project h3 { font: 700 1.15rem/1.3 "Space Grotesk", Inter, sans-serif; margin: 0 0 .4rem; }
+	.project p { margin: 0 0 .9rem; color: var(--muted); font-size: .97rem; }
+	.project .meta { font: 500 .8rem/1.4 "IBM Plex Mono", ui-monospace, monospace; color: var(--muted); }
+	.project.pending { border-style: dashed; box-shadow: none; }
+
+	.two { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+	.list { list-style: none; padding: 0; margin: 0; }
+	.list li { padding: .7rem 0; border-bottom: 1px solid var(--rule); }
+	.list li:last-child { border-bottom: 0; }
+	.list .sub { display: block; color: var(--muted); font-size: .92rem; }
+
+	.contact {
+		margin: 4rem 0 0;
+		padding: 2.5rem 1.5rem;
+		border-radius: 18px;
+		background: var(--sky);
+		color: var(--hero-text);
+		text-align: center;
+	}
+	.contact h2 { color: var(--hero-text); margin-bottom: .5rem; }
+	.contact p { color: var(--hero-muted); margin: 0 0 1.5rem; }
+	footer { padding: 2rem 0 3rem; color: var(--muted); font-size: .85rem; text-align: center; }
+
+	@media (max-width: 760px) {
+		.proof, .projects, .two { grid-template-columns: 1fr; }
+		.two { gap: 1.5rem; }
+		.hero-body { padding: 3.5rem 0 4.5rem; }
+		.orbit { right: -22rem; top: -10rem; opacity: .35; }
+		nav ul { gap: .9rem; }
+	}
 </style>
-<head>
-
+</head>
 <body>
-<h1 style="margin-bottom: 0">Robin Shaw</h1>
 
-<p id="links" style="margin-top: 0">
-	<a href="mailto:VicisVitium@gmail.com">Contact: VicisVitium@gmail.com</a>
-	-
-	<a href="https://www.linkedin.com/in/rshaw5/">LinkedIn</a>
-	-
-	<a href="https://github.com/rShaw5">GitHub</a>
-	-
-	<a href="https://www.imdb.com/name/nm5822028/">IMDB</a>
-</p>
+<header class="hero">
+	<svg class="orbit" viewBox="0 0 400 400" aria-hidden="true">
+		<ellipse cx="200" cy="200" rx="190" ry="120" fill="none" stroke="#7f95bd" stroke-width="0.8" transform="rotate(-24 200 200)"/>
+		<ellipse cx="200" cy="200" rx="140" ry="82" fill="none" stroke="#7f95bd" stroke-width="0.6" stroke-dasharray="2 5" transform="rotate(-24 200 200)"/>
+		<circle cx="200" cy="200" r="16" fill="#1d3156" stroke="#7f95bd" stroke-width="0.8"/>
+		<circle cx="372" cy="122" r="4" fill="#f2a541"/>
+	</svg>
+	<div class="wrap">
+		<nav>
+			<a class="mark" href="#">robin shaw</a>
+			<ul>
+				<li><a href="#work">work</a></li>
+				<li><a href="#projects">projects</a></li>
+				<li><a href="#contact">contact</a></li>
+			</ul>
+		</nav>
+		<div class="hero-body">
+			<p class="eyebrow">Backend · data correctness</p>
+			<h1>Robin Shaw</h1>
+			<p class="headline">Backend Engineer | I build checks that stop wrong numbers before customers see them</p>
+			<p class="pitch">I'm a backend engineer. I was the sole owner of a production accounting system, and I traced a $2.3 million error back to one missing record.</p>
+			<div class="actions">
+				<a class="btn btn-primary" href="https://www.linkedin.com/in/rshaw5/">Message me on LinkedIn</a>
+				<a class="btn btn-ghost" href="https://github.com/rShaw5">GitHub</a>
+			</div>
+			<p class="place">Kitsap County (Seattle area)</p>
+		</div>
+	</div>
+</header>
 
-<h2>
-	Community
-	-
-	Technology
-	-
-	Performance
-</h2>
+<main class="wrap">
 
-<hr>
+	<div class="proof">
+		<div class="stat">
+			<span class="num">6 years</span>
+			<p>building a multi-tenant SaaS platform for lease accounting (ASC 842 and IFRS 16)</p>
+		</div>
+		<div class="stat">
+			<span class="num">$2.3M</span>
+			<p>over-statement in a customer's amortization, traced back to one missing lease record</p>
+		</div>
+		<div class="stat">
+			<span class="num">Sole owner<span class="check" aria-hidden="true">✓</span></span>
+			<p>of a production accounting system after its designer left in 2024</p>
+		</div>
+	</div>
 
+	<section id="work">
+		<h2 class="label">Work</h2>
+		<div class="prose">
+			<p>I spent six years at Leasecake building a multi-tenant SaaS platform. I wrote the platform's lease accounting automation: amortization schedules, journal entries, and the recalculations that run when a lease changes.</p>
+			<p>In early 2025 I built the platform's first pre-delivery verification system. Its consistency and regression checks block any report that fails before it reaches a customer.</p>
+			<p>I'm open to backend engineering roles in any stack. Longer term I'm aiming at science and space teams, where data has to be right for the people relying on it.</p>
+		</div>
+		<ul class="chips" aria-label="Languages and tools">
+			<li>PHP (Laravel)</li>
+			<li>MySQL</li>
+			<li>Vue</li>
+			<li>JavaScript</li>
+			<li>Docker</li>
+			<li>GitHub Actions</li>
+			<li>Python</li>
+			<li>C / C++</li>
+			<li>C#</li>
+		</ul>
+	</section>
 
-<h3 id="header-community">Community</h3>
-<p>
-	In 2026, my byword and passion is community. Large and small, I am committed to making the world a better place by focusing on the things and people that deserve our attention and not on those that don't.
-</p>
+	<section id="projects">
+		<p class="label">Projects</p>
+		<h2>Things I've built</h2>
+		<div class="projects">
+			<article class="project">
+				<h3><a href="https://github.com/rShaw5/sqs-lambda-pipeline">sqs-lambda-pipeline</a></h3>
+				<p>An AWS pipeline that validates every record, skips repeats, and sends failures to a dead-letter queue. A 1,000-record test came out exactly right: 930 saved, 50 rejected, 20 duplicates.</p>
+				<p class="meta">SQS · Lambda · DynamoDB · Terraform · 34 tests</p>
+			</article>
+			<article class="project">
+				<h3><a href="https://github.com/rShaw5/tle-checker">tle-checker</a></h3>
+				<p>Checks public satellite orbit data and flags rows that can't be trusted: bad checksums, mismatched lines, impossible orbits, stale data and duplicates. Run against all 15,910 active satellites in CelesTrak's feed.</p>
+				<p class="meta">Python · standard library · 98 tests</p>
+			</article>
+		</div>
+	</section>
 
-<h3 id="header-technology">Technology</h3>
-<p>
-	I have always been in love with technology. My six years of work as an web-developer helped me hone that skill. I'm now planning to take it to the next level by combining all my skills in the service of community, public speaking, and entrepreneureal ventures.
-</p>
+	<section>
+		<div class="two">
+			<div>
+				<p class="label">Education</p>
+				<ul class="list">
+					<li>B.S. Computer Science<span class="sub">Oregon State University, 2019</span></li>
+					<li>B.B.A. Business Administration, Magna Cum Laude<span class="sub">University of New Mexico, Anderson School of Management, 2012</span></li>
+				</ul>
+			</div>
+			<div>
+				<p class="label">Outside work</p>
+				<ul class="list">
+					<li>1st place, two business plan competitions<span class="sub">Anderson School (2011) and Rio Grande (2012)</span></li>
+					<li>Best Witness in State<span class="sub">New Mexico Mock Trial, 2008</span></li>
+					<li>Actor in <a href="https://www.imdb.com/name/nm5822028/">Spare Parts and Good Kill</a><span class="sub">feature films, 2012–2017</span></li>
+					<li>Rotary Club of Silverdale and Toastmasters International</li>
+				</ul>
+			</div>
+		</div>
+	</section>
 
-<h3 id="header-performance">Performance</h3>
-<p>
-	My "claim to fame" is a small speaking part in George Lopez's movie "<a href="https://www.imdb.com/name/nm5822028/">Spare Parts"</a>. I am also the winner of New Mexico's 2008 "Best Witness in State" for Mock Trial, and first place winner in two business plan competitions in 2011.
-</p>
-<body>
+	<div class="contact" id="contact">
+		<h2>Let's talk</h2>
+		<p>A message on LinkedIn is the best way to reach me.</p>
+		<a class="btn btn-primary" href="https://www.linkedin.com/in/rshaw5/">Message me on LinkedIn</a>
+	</div>
+
+</main>
+
+<footer>Robin Shaw · <a href="https://github.com/rShaw5">github.com/rShaw5</a></footer>
+
+</body>
 </html>
-
-<hr>
-
-<h3>Current Projects</h3>
-<h4>"Quest-Based" Networking: Practial Steps to Building Community</h4>
-<p>
-	A philosophy and practical process to "networking" in an open and transparent way to "raise all boats". I'm developing this technique to help people who want to network but don't know how by calling out the fears and creating actionable, repeatable steps to accomplish goals.
-</p>
